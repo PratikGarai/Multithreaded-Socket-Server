@@ -3,17 +3,15 @@
 import socket 
 from colorama import Fore
 import pickle
-
-
-# Globals
-SOCKET_FAMILY = socket.AF_INET
-SOCKET_TYPE = socket.SOCK_STREAM
-SOCKET_HOST = "localhost"
-SOCKET_PORT = 3500
-SOCKET_INCOMING_LIMIT = 1
-SOCKET_ACCEPT_TIMEOUT = 5
-
-BUFFER_SIZE = 8         # Bytes
+from config import (
+    BUFFER_SIZE, 
+    SERVER_ACCEPT_TIMEOUT, 
+    SERVER_HOST, 
+    SERVER_INCOMING_LIMIT, 
+    SERVER_PORT, 
+    SOCKET_FAMILY, 
+    SOCKET_TYPE
+)
 
 # Server starts here
 
@@ -23,15 +21,15 @@ soc = socket.socket(
 )
 
 soc.bind((
-    SOCKET_HOST,
-    SOCKET_PORT
+    SERVER_HOST,
+    SERVER_PORT
 ))
-print(Fore.CYAN + f"Socket is bound to {SOCKET_HOST} on port {SOCKET_PORT}.")
+print(Fore.CYAN + f"Socket is bound to {SERVER_HOST} on port {SERVER_PORT}.")
 
-soc.listen(SOCKET_INCOMING_LIMIT)
+soc.listen(SERVER_INCOMING_LIMIT)
 print(Fore.CYAN + "Listening for incoming connection ...")
 
-soc.settimeout(SOCKET_ACCEPT_TIMEOUT)
+soc.settimeout(SERVER_ACCEPT_TIMEOUT)
 connected = False
 try:
     connection, address = soc.accept()
