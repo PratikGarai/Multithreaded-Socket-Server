@@ -42,16 +42,17 @@ except socket.timeout:
 if connected:
     received_data = connection.recv(BUFFER_SIZE)
     received_data = pickle.loads(received_data)
-    print(Fore.GREEN+f"Received data from the client: {received_data}")
+    print(Fore.WHITE+f"\nReceived data from the client: ", end="")
+    print(Fore.GREEN+f"{received_data}")
     
     msg = "Reply from the server."
-    msg = pickle.loads(msg)
+    msg = pickle.dumps(msg)
     connection.sendall(msg)
-    print(Fore.GREEN+"Server sent a message to the client.")
+    print(Fore.GREEN+"\nServer sent a message to the client.")
 
     connection.close()
-    print(Fore.CYAN+f"Connection is closed with: {address}.")
+    print(Fore.CYAN+f"\nConnection is closed with: {address}.")
 
 soc.close()
 print(Fore.GREEN+"\nSocket is closed.")
-print(Fore.WHITE)
+print(Fore.WHITE+" ")
