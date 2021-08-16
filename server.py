@@ -1,6 +1,7 @@
 # Imports
 
-import socket 
+import socket
+from utils import recv 
 from colorama import Fore
 import pickle
 from config import (
@@ -10,7 +11,8 @@ from config import (
     SERVER_INCOMING_LIMIT, 
     SERVER_PORT, 
     SOCKET_FAMILY, 
-    SOCKET_TYPE
+    SOCKET_TYPE,
+    RECV_TIMEOUT
 )
 
 # Server starts here
@@ -40,17 +42,19 @@ except socket.timeout:
     soc.close()
 
 if connected:
-    received_data = connection.recv(BUFFER_SIZE)
-    received_data = pickle.loads(received_data)
-    print(Fore.WHITE+f"\nReceived data from the client: ", end="")
-    print(Fore.GREEN+f"{received_data}")
-    
-    msg = "Reply from the server."
-    msg = pickle.dumps(msg)
-    connection.sendall(msg)
-    print(Fore.GREEN+"\nServer sent a message to the client.")
-
-    connection.close()
+    while True :
+        received_data, status = recv(connection)
+        if status == 0:
+            connection.close()
+            print(Fore.RED+f"Connection Closed either due to inactivity for {RECV_TIMEOUT} seconds or due to an error.\n")
+            break
+        print(Fore.WHITE+f"\nReceived data from the client: ", end="")
+        print(Fore.GREEN+f"{received_data}")
+        
+        msg = "Reply from the server."
+        msg = pickle.dumps(msg)
+        connection.sendall(msg)
+        print(Fore.GREEN+"\nServer sent a message to the client.")
     print(Fore.CYAN+f"\nConnection is closed with: {address}.")
 
 soc.close()

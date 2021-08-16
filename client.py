@@ -28,7 +28,10 @@ msg = pickle.dumps(msg)
 soc.sendall(msg)
 print(Fore.GREEN+"\nClient sent a message to the server.")
 
-received_data = soc.recv(BUFFER_SIZE)
+received_data = b''
+while str(received_data)[-2] != '.':
+    data = soc.recv(BUFFER_SIZE)
+    received_data += data
 received_data = pickle.loads(received_data)
 print(Fore.WHITE+f"\nReceived data from the server: ", end="")
 print(Fore.GREEN+f"{received_data}")
